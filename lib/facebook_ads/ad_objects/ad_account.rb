@@ -77,6 +77,7 @@ module FacebookAds
       "THB",
       "TRY",
       "TWD",
+      "UAH",
       "USD",
       "UYU",
       "VND",
@@ -86,18 +87,12 @@ module FacebookAds
     PERMITTED_TASKS = [
       "ADVERTISE",
       "ANALYZE",
-      "CREATIVE",
-      "DRAFT",
-      "FB_EMPLOYEE_DSO_ADVERTISE",
       "MANAGE",
     ]
 
     TASKS = [
       "ADVERTISE",
       "ANALYZE",
-      "CREATIVE",
-      "DRAFT",
-      "FB_EMPLOYEE_DSO_ADVERTISE",
       "MANAGE",
     ]
 
@@ -215,6 +210,7 @@ module FacebookAds
         api.has_param :after, 'string'
         api.has_param :business_id, 'string'
         api.has_param :category, { enum: -> { AdActivity::CATEGORY }}
+        api.has_param :data_source, { enum: -> { AdActivity::DATA_SOURCE }}
         api.has_param :extra_oids, { list: 'string' }
         api.has_param :limit, 'int'
         api.has_param :oid, 'string'
@@ -227,6 +223,7 @@ module FacebookAds
     has_edge :ad_place_page_sets do |edge|
       edge.get 'AdPlacePageSet'
       edge.post 'AdPlacePageSet' do |api|
+        api.has_param :category, { enum: -> { AdPlacePageSet::CATEGORY }}
         api.has_param :location_types, { list: { enum: -> { AdPlacePageSet::LOCATION_TYPES }} }
         api.has_param :name, 'string'
         api.has_param :parent_page, 'string'
@@ -236,19 +233,11 @@ module FacebookAds
 
     has_edge :ad_place_page_sets_async do |edge|
       edge.post 'AdPlacePageSet' do |api|
+        api.has_param :category, { enum: -> { AdPlacePageSet::CATEGORY }}
         api.has_param :location_types, { list: { enum: -> { AdPlacePageSet::LOCATION_TYPES }} }
         api.has_param :name, 'string'
         api.has_param :parent_page, 'string'
         api.has_param :targeted_area_type, { enum: -> { AdPlacePageSet::TARGETED_AREA_TYPE }}
-      end
-    end
-
-    has_edge :ad_sets do |edge|
-      edge.delete do |api|
-        api.has_param :before_date, 'datetime'
-        api.has_param :delete_offset, 'int'
-        api.has_param :delete_strategy, { enum: %w{DELETE_ANY DELETE_ARCHIVED_BEFORE DELETE_OLDEST }}
-        api.has_param :object_count, 'int'
       end
     end
 
@@ -347,10 +336,6 @@ module FacebookAds
         api.has_param :source_url, 'string'
         api.has_param :source_zip, 'file'
       end
-    end
-
-    has_edge :adreportschedules do |edge|
-      edge.get
     end
 
     has_edge :adrules_history do |edge|
@@ -529,6 +514,7 @@ module FacebookAds
         api.has_param :composer_type, 'string'
         api.has_param :container_type, { enum: -> { AdVideo::CONTAINER_TYPE }}
         api.has_param :content_category, { enum: -> { AdVideo::CONTENT_CATEGORY }}
+        api.has_param :creative_tools, 'string'
         api.has_param :description, 'string'
         api.has_param :embeddable, 'bool'
         api.has_param :end_offset, 'int'
@@ -582,6 +568,7 @@ module FacebookAds
         api.has_param :upload_session_id, 'string'
         api.has_param :upload_setting_properties, 'string'
         api.has_param :video_file_chunk, 'file'
+        api.has_param :video_id_original, 'string'
         api.has_param :video_start_time_ms, 'int'
         api.has_param :waterfall_id, 'string'
         api.accepts_files!
@@ -692,6 +679,7 @@ module FacebookAds
         api.has_param :promoted_object, 'object'
         api.has_param :source_campaign_id, 'string'
         api.has_param :special_ad_categories, { list: { enum: -> { Campaign::SPECIAL_AD_CATEGORIES }} }
+        api.has_param :special_ad_category_country, { list: { enum: -> { Campaign::SPECIAL_AD_CATEGORY_COUNTRY }} }
         api.has_param :spend_cap, 'int'
         api.has_param :status, { enum: -> { Campaign::STATUS }}
         api.has_param :topline_id, 'string'
